@@ -1,10 +1,8 @@
 package com.javamailsender.backend.service.implementation;
 
 import com.javamailsender.backend.service.EmailSender;
-import com.sun.source.tree.TryTree;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
-import org.apache.logging.log4j.message.SimpleMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +43,11 @@ public class EmailSenderImpl implements EmailSender {
 
     @Override
     public void sendMailToManyPeople(String[] to, String subject, String message) {
+        if (to == null || to.length == 0) {
+            logger.info("Please fill the array");
+            return;
+        }
+
         SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
         simpleMailMessage.setFrom("pratyushsinha934@gmail.com");
         simpleMailMessage.setTo(to);
@@ -112,7 +115,6 @@ public class EmailSenderImpl implements EmailSender {
 
             mimeMessageHelper.addAttachment(Objects.requireNonNull(fileSystemResource.getFilename()), file);
             javaMailSender.send(mimeMessage);
-
 
         } catch (MessagingException e) {
             throw new RuntimeException(e);
